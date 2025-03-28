@@ -39,6 +39,14 @@ const QueryInput = () => {
     dispatch(setCurrentQuery(e.target.value));
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    // Submit on Enter key (without Shift key)
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault(); // Prevent newline
+      handleQuerySubmit();
+    }
+  };
+
   const handleSuggestionClick = (suggestion: string) => {
     dispatch(setCurrentQuery(suggestion));
     if (textareaRef.current) {
@@ -89,19 +97,20 @@ const QueryInput = () => {
             ref={textareaRef}
             value={currentQuery}
             onChange={handleQueryChange}
+            onKeyDown={handleKeyDown}
             onFocus={() => setResizing(false)}
             onBlur={() => setResizing(false)}
             className="block w-full pl-10 pr-12 py-3 border-0 text-gray-900 placeholder-gray-500 focus:ring-0 sm:text-sm resize-none min-h-[80px]"
             placeholder="Ask a question about your data..."
           />
-          <div className="absolute right-0 inset-y-0 flex py-1.5 pr-1.5">
+          <div className="absolute right-0 inset-y-0 flex items-center py-1.5 pr-1.5 z-10">
             <button
               type="button"
               onClick={handleQuerySubmit}
-              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-500 hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
+              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-bold rounded-md shadow-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z" clipRule="evenodd" />
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
               </svg>
               Run
             </button>
